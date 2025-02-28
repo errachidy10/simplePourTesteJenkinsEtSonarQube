@@ -1,56 +1,33 @@
 pipeline {
     agent any
-
-    tools {
-        // Install the Maven version needed
-        maven 'mvn'
-    }
-
-    environment {
-        // Define SonarQube server
-        SONARQUBE_SERVER = 'SonarQube-Server'
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the repository
-                git url: 'https://github.com/errachidy10/simplePourTesteJenkinsEtSonarQube.git', branch: 'main'
+                git branch: 'master', url: 'https://github.com/errachidy10/simplePourTesteJenkinsEtSonarQube.git'
             }
         }
-
         stage('Build') {
             steps {
-                // Build the project using Maven
-                sh 'mvn clean package'
+                // Add your build steps here (e.g., Maven, Gradle commands)
+                // Example (Maven):
+                sh 'mvn clean install'
             }
         }
-
-        stage('SonarQube Analysis') {
-            environment {
-                // Define SonarQube authentication
-                SONAR_AUTH_TOKEN = credentials('sonarJenkinsToken1')
-            }
-            steps {
-                // Run SonarQube analysis
-                sh 'mvn sonar:sonar -Dsonar.projectKey=simplePourTesteJenkinsEtSonarQube -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONAR_AUTH_TOKEN'
-            }
-        }
-
         stage('Test') {
             steps {
-                // Run tests
-                sh 'mvn test'
+                // Assumes your tests generate reports in the "target/surefire-reports" directory
+                junit 'target/surefire-reports/*.xml'  // Adjust the path if necessary
             }
         }
+        stage('SonarQube Analysis') {
+           steps {
+             // Add SonarQube analysis steps here (after the build and test stages)
+           }
+        }
     }
-
     post {
         always {
-            // Archive the build artifacts
-            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-            // Publish test results
-            junit '**/target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true // Change to your output artifact(s)
         }
     }
 }
