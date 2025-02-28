@@ -66,7 +66,7 @@ pipeline {
             steps {
                 // Add your build steps here (e.g., Maven, Gradle commands)
                 // Example (Maven):
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
         stage('Test') {
