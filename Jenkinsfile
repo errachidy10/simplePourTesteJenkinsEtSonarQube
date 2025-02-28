@@ -22,7 +22,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Build the project using Maven
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
@@ -33,14 +33,14 @@ pipeline {
             }
             steps {
                 // Run SonarQube analysis
-                sh 'mvn sonar:sonar -Dsonar.projectKey=simplePourTesteJenkinsEtSonarQube -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONAR_AUTH_TOKEN'
+                bat 'mvn sonar:sonar -Dsonar.projectKey=simplePourTesteJenkinsEtSonarQube -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
         }
 
         stage('Test') {
             steps {
                 // Run tests
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
     }
