@@ -4,7 +4,6 @@ pipeline {
     tools {
         // Install the Maven version needed
         maven 'mvn'
-        jdk 'JDK 11'
     }
 
     environment {
